@@ -8,7 +8,7 @@ public class MovementController : MonoBehaviour
     public GameManager gameManager;
 
     public GameObject currentNode;
-    public float speed = 4f; // velocidade de movimentação
+    public float speed = 3f; // velocidade de movimentação
 
     public string direction = "";
     public string lastMovingDirection = ""; // caso o usuário mova-se para uma direção inválida,
@@ -18,6 +18,7 @@ public class MovementController : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
+        lastMovingDirection = "left";
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
     }
 
