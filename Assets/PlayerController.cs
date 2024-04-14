@@ -5,12 +5,10 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
 
-MovementController movementController;
-
-
+    MovementController movementController;
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         movementController = GetComponent<MovementController>();
     }
