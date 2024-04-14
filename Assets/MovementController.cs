@@ -5,16 +5,20 @@ using UnityEngine;
 public class MovementController : MonoBehaviour
 {
 
+    public GameManager gameManager;
+
     public GameObject currentNode;
-    public float speed = 4f;
+    public float speed = 4f; // velocidade de movimentação
 
     public string direction = "";
-    public string lastMovingDirection = "";
+    public string lastMovingDirection = ""; // caso o usuário mova-se para uma direção inválida,
+                                            // é utilizada a ultima direção válida como valor.
+    public bool canWarp = true;
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
-        
+        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
     }
 
     // Update is called once per frame
@@ -22,6 +26,7 @@ public class MovementController : MonoBehaviour
     {
         NodeController currentNodeController = currentNode.GetComponent<NodeController>();
 
+        // movimentação é com base no tempo do relógio para que computadores mais potentes não atualizem de forma diferente dos demais
         transform.position = Vector2.MoveTowards(transform.position, currentNode.transform.position, speed * Time.deltaTime);
 
         bool reverseDirection = false;
@@ -36,20 +41,49 @@ public class MovementController : MonoBehaviour
 
         //Quando chegar no centro do node
 
-        if((transform.position.x == currentNode.transform.position.x && transform.position.y == currentNode.transform.position.y) || reverseDirection){
-            //Pegar o próximo node
-            GameObject newNode = currentNodeController.GetNodeFromDirection(direction);
-            if(newNode != null){
-                currentNode = newNode;
-                lastMovingDirection = direction;
+        if((transform.position.x == currentNode.transform.position.x && transform.position.y == currentNode.transform.position.y) || reverseDirection)
+        {
+            // Se chegar no centro do warp na esquerda, vai para a direita
+            if(currentNodeController.isWarpLeftNode && canWarp)
+            {
+                currentNode = gameManager.rightWarpNode;
+                direction = "left";
+                lastMovingDirection = "left";
+                transform.position = currentNode.transform.position;
+                canWarp = false;
             }
-            else{
-                direction = lastMovingDirection;
-                newNode = currentNodeController.GetNodeFromDirection(direction);
-                if(newNode != null){
+            // Se está no centro do warp da direita, vai para esquerda
+            else if(currentNodeController.isWarpRightNode && canWarp) {
+                currentNode = gameManager.leftWarpNode;
+                direction = "right";
+                lastMovingDirection = "right";
+                transform.position = currentNode.transform.position;
+                canWarp = false;
+            }
+            // se não, encontra o proximo node que irá se mover
+            else
+            {
+                //Pegar o próximo node
+                GameObject newNode = currentNodeController.GetNodeFromDirection(direction);
+                if (newNode != null)
+                {
                     currentNode = newNode;
+                    lastMovingDirection = direction;
+                }
+                else
+                {
+                    direction = lastMovingDirection;
+                    newNode = currentNodeController.GetNodeFromDirection(direction);
+                    if (newNode != null)
+                    {
+                        currentNode = newNode;
+                    }
                 }
             }
+        }
+        else
+        {
+            canWarp = true;
         }
     }
 
