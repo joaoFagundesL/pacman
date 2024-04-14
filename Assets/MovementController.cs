@@ -15,10 +15,11 @@ public class MovementController : MonoBehaviour
                                             // é utilizada a ultima direção válida como valor.
     public bool canWarp = true;
 
+    public bool isGhost = false;
+
     // Start is called before the first frame update
     void Awake()
     {
-        lastMovingDirection = "left";
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
     }
 
@@ -44,6 +45,12 @@ public class MovementController : MonoBehaviour
 
         if((transform.position.x == currentNode.transform.position.x && transform.position.y == currentNode.transform.position.y) || reverseDirection)
         {
+
+            if (isGhost)
+            {
+                GetComponent<EnemyController>().ReachedCenteOfNode(currentNodeController);
+            }
+
             // Se chegar no centro do warp na esquerda, vai para a direita
             if(currentNodeController.isWarpLeftNode && canWarp)
             {

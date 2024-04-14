@@ -11,6 +11,7 @@ public class PlayerController : MonoBehaviour
     void Awake()
     {
         movementController = GetComponent<MovementController>();
+        movementController.lastMovingDirection = "left";
     }
 
     // Update is called once per frame
