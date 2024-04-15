@@ -27,8 +27,14 @@ public class PlayerController : MonoBehaviour
     public void Setup()
     {
         movementController.currentNode = startNode;
+        movementController.direction = "left";
         movementController.lastMovingDirection = "left";
         transform.position = startPos;
+    }
+
+    public void Stop()
+    {
+       
     }
 
     // Update is called once per frame

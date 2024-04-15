@@ -99,12 +99,18 @@ public class EnemyController : MonoBehaviour
     public void Setup()
     {
         ghostNodeStates = startGhostNodeState;
+        readyToLeaveHome = false;
         movementController.currentNode = startingNode;
         transform.position = startingNode.transform.position;
+
+        movementController.direction = "";
+        movementController.lastMovingDirection = "";
 
         scatterNodeIndex = 0;
 
         isFrightened = false;
+
+        leftHomeBefore = false;
 
         if (ghostColour == GhostColour.red)
         {

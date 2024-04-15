@@ -51,6 +51,8 @@ public class GameManager : MonoBehaviour
     public int lives;
     public int currentLevel;
 
+    public Image blackBackground;
+
     public enum GhostMode
     {
         chase, scatter
@@ -63,6 +65,7 @@ public class GameManager : MonoBehaviour
     {
         newGame = true;
         clearedLevel = false;
+        blackBackground.enabled = false;
 
         redGhostController = redGhost.GetComponent<EnemyController>();
         pinkGhostController = pinkGhost.GetComponent<EnemyController>();
@@ -71,7 +74,7 @@ public class GameManager : MonoBehaviour
         
         // para permitir que o ghost possa identificar que há um node abaixo dele
         ghostNodeStart.GetComponent<NodeController>().isGhostStartingNode = true;
-        //pacman = GameObject.Find("player");
+       // pacman = GameObject.Find("player");
         StartCoroutine(Setup());
     }
 
@@ -79,8 +82,11 @@ public class GameManager : MonoBehaviour
     {
         if (clearedLevel)
         {
+            blackBackground.enabled = true;
             yield return new WaitForSeconds(0.1f);
         }
+
+        blackBackground.enabled = false;
 
         pelletsCollectedOnThisLife = 0;
         currentGhostMode = GhostMode.scatter;
@@ -91,6 +97,7 @@ public class GameManager : MonoBehaviour
 
         if (clearedLevel || newGame)
         {
+            pelletsLeft = totalPellets;
             waitTimer = 4f;
             for (int i = 0; i < nodeControllers.Count; i++)
             {
@@ -127,6 +134,14 @@ public class GameManager : MonoBehaviour
         siren.Play();
     }
 
+    void StopGame()
+    {
+        gameIsRunning = false;
+        siren.Stop();
+        pacman.GetComponent<PlayerController>().Stop();
+
+    }
+
     // Update is called once per frame
     void Update()
     {
@@ -146,7 +161,7 @@ public class GameManager : MonoBehaviour
         scoreText.text = "Score: " + score.ToString();
     }
 
-    public void CollectedPellet(NodeController nodeController)
+    public IEnumerator CollectedPellet(NodeController nodeController)
     {
         if (currentMunch == 0)
         {
@@ -189,6 +204,15 @@ public class GameManager : MonoBehaviour
 
 
         AddToScore(10);
+
+        if (pelletsLeft == 0)
+        {
+            currentLevel++;
+            clearedLevel = true;
+            StopGame();
+            yield return new WaitForSeconds(1);
+            StartCoroutine(Setup());
+        }
 
     }
 }
