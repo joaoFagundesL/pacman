@@ -38,7 +38,6 @@ public class EnemyController : MonoBehaviour
 
     public GameObject startingNode;
 
-    public bool readyToLeaveHome = false;
 
     public GameManager gameManager;
 
@@ -48,6 +47,9 @@ public class EnemyController : MonoBehaviour
 
     public GameObject[] scatterNodes;
     public int scatterNodeIndex;
+    public bool readyToLeaveHome = false;
+
+    public bool leftHomeBefore = false;
 
     void Awake()
     {
@@ -61,6 +63,7 @@ public class EnemyController : MonoBehaviour
             respawnState = GhostNodeStatesEnum.centerNode;
             startingNode = ghostNodeStart;
             readyToLeaveHome = true;
+            leftHomeBefore = true;
         } 
         else if (ghostColour == GhostColour.pink)
         {
@@ -120,6 +123,7 @@ public class EnemyController : MonoBehaviour
     {
         if (ghostNodeStates == GhostNodeStatesEnum.movingInNodes)
         {
+            leftHomeBefore = true;
 
             if (gameManager.currentGhostMode == GameManager.GhostMode.scatter)
             {
@@ -127,7 +131,8 @@ public class EnemyController : MonoBehaviour
             }
             else if (isFrightened)
             {
-
+                string direction = GetRandomDirection();
+                movementController.SetDirection(direction);
             }
             else
             {
@@ -218,6 +223,36 @@ public class EnemyController : MonoBehaviour
                 }
             }
         }
+    }
+
+    string GetRandomDirection()
+    {
+        List<string> possibleDirections = new List<string>();
+
+        NodeController nodeController = movementController.currentNode.GetComponent<NodeController>();
+
+        if (nodeController.canMoveDown && movementController.lastMovingDirection != "up")
+        {
+            possibleDirections.Add("down");
+        }
+        if (nodeController.canMoveUp && movementController.lastMovingDirection != "down")
+        {
+            possibleDirections.Add("up");
+        }
+        if (nodeController.canMoveRight && movementController.lastMovingDirection != "left")
+        {
+            possibleDirections.Add("right");
+        }
+        if (nodeController.canMoveLeft && movementController.lastMovingDirection != "right")
+        {
+            possibleDirections.Add("left");
+        }
+
+        string direction = "";
+        int randomDirectionIndex = Random.Range(0, possibleDirections.Count - 1);
+        direction = possibleDirections[randomDirectionIndex];
+        return direction;
+
     }
 
     void DetermineGhostScatterModeDirection()

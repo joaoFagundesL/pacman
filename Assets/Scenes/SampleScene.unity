@@ -13854,7 +13854,6 @@ MonoBehaviour:
   ghostNodeStart: {fileID: 97565536}
   movementController: {fileID: 423115123}
   startingNode: {fileID: 65905395}
-  readyToLeaveHome: 0
   gameManager: {fileID: 1467770299}
   testRespawn: 0
   isFrightened: 0
@@ -13864,6 +13863,8 @@ MonoBehaviour:
   - {fileID: 1252492325}
   - {fileID: 556381801}
   scatterNodeIndex: 0
+  readyToLeaveHome: 0
+  leftHomeBefore: 0
 --- !u!4 &423115125
 Transform:
   m_ObjectHideFlags: 0
@@ -39177,7 +39178,6 @@ MonoBehaviour:
   ghostNodeStart: {fileID: 97565536}
   movementController: {fileID: 1195641742}
   startingNode: {fileID: 65905395}
-  readyToLeaveHome: 0
   gameManager: {fileID: 1467770299}
   testRespawn: 0
   isFrightened: 0
@@ -39187,6 +39187,8 @@ MonoBehaviour:
   - {fileID: 1603188977}
   - {fileID: 127443223}
   scatterNodeIndex: 0
+  readyToLeaveHome: 0
+  leftHomeBefore: 0
 --- !u!4 &1195641744
 Transform:
   m_ObjectHideFlags: 0
@@ -40394,7 +40396,6 @@ MonoBehaviour:
   ghostNodeStart: {fileID: 97565536}
   movementController: {fileID: 1229681673}
   startingNode: {fileID: 65905395}
-  readyToLeaveHome: 0
   gameManager: {fileID: 1467770299}
   testRespawn: 0
   isFrightened: 0
@@ -40408,6 +40409,8 @@ MonoBehaviour:
   - {fileID: 1777765516}
   - {fileID: 1575000081}
   scatterNodeIndex: 0
+  readyToLeaveHome: 0
+  leftHomeBefore: 0
 --- !u!4 &1229681675
 Transform:
   m_ObjectHideFlags: 0
@@ -48223,8 +48226,12 @@ MonoBehaviour:
   ghostNodeStart: {fileID: 97565536}
   redGhost: {fileID: 1195641740}
   blueGhost: {fileID: 1229681670}
-  pinkGhost: {fileID: 0}
-  orangeGhost: {fileID: 0}
+  pinkGhost: {fileID: 423115120}
+  orangeGhost: {fileID: 2049099067}
+  totalPellets: 0
+  pelletsLeft: 0
+  pelletsCollectedOnThisLife: 0
+  hadDeathOnThisLevel: 0
   currentGhostMode: 0
 --- !u!82 &1467770300
 AudioSource:
@@ -66001,7 +66008,6 @@ MonoBehaviour:
   ghostNodeStart: {fileID: 97565536}
   movementController: {fileID: 2049099070}
   startingNode: {fileID: 65905395}
-  readyToLeaveHome: 0
   gameManager: {fileID: 1467770299}
   testRespawn: 0
   isFrightened: 0
@@ -66014,6 +66020,8 @@ MonoBehaviour:
   - {fileID: 1129919429}
   - {fileID: 1921084112}
   scatterNodeIndex: 0
+  readyToLeaveHome: 0
+  leftHomeBefore: 0
 --- !u!4 &2049099072
 Transform:
   m_ObjectHideFlags: 0
