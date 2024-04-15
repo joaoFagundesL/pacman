@@ -28,11 +28,28 @@ public class GameManager : MonoBehaviour
     public GameObject pinkGhost;
     public GameObject orangeGhost;
 
+    public EnemyController redGhostController;
+    public EnemyController pinkGhostController;
+    public EnemyController blueGhostController;
+    public EnemyController orangeGhostController;
+
     public int totalPellets;
     public int pelletsLeft;
     public int pelletsCollectedOnThisLife;
 
     public bool hadDeathOnThisLevel = false;
+
+    public bool gameIsRunning;
+
+    public List<NodeController> nodeControllers = new List<NodeController>();
+
+    public bool newGame;
+    public bool clearedLevel;
+
+    public AudioSource startGameAudio;
+
+    public int lives;
+    public int currentLevel;
 
     public enum GhostMode
     {
@@ -44,12 +61,69 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
-        pinkGhost.GetComponent<EnemyController>().readyToLeaveHome = true;
-        currentGhostMode = GhostMode.chase;
+        newGame = true;
+        clearedLevel = false;
+
+        redGhostController = redGhost.GetComponent<EnemyController>();
+        pinkGhostController = pinkGhost.GetComponent<EnemyController>();
+        blueGhostController = blueGhost.GetComponent<EnemyController>();
+        orangeGhostController = orangeGhost.GetComponent<EnemyController>();
+        
         // para permitir que o ghost possa identificar que há um node abaixo dele
         ghostNodeStart.GetComponent<NodeController>().isGhostStartingNode = true;
-        score = 0;
+        //pacman = GameObject.Find("player");
+        StartCoroutine(Setup());
+    }
+
+    public IEnumerator Setup()
+    {
+        if (clearedLevel)
+        {
+            yield return new WaitForSeconds(0.1f);
+        }
+
+        pelletsCollectedOnThisLife = 0;
+        currentGhostMode = GhostMode.scatter;
+        gameIsRunning = false;
         currentMunch = 0;
+
+        float waitTimer = 1f;
+
+        if (clearedLevel || newGame)
+        {
+            waitTimer = 4f;
+            for (int i = 0; i < nodeControllers.Count; i++)
+            {
+                nodeControllers[i].RespawnPellet();
+            }
+        }
+
+        if (newGame)
+        {
+            //startGameAudio.Play(); da erro essa linha
+            score = 0;
+            scoreText.text = "Score: " + score.ToString();
+            lives = 3;
+            currentLevel = 1;
+        }
+
+        pacman.GetComponent<PlayerController>().Setup();
+        
+        redGhostController.Setup();
+        pinkGhostController.Setup();    
+        blueGhostController.Setup();
+        orangeGhostController.Setup();
+
+        newGame = false;
+        clearedLevel = false;
+        yield return new WaitForSeconds(waitTimer);
+
+        StartGame();
+    } 
+
+    void StartGame()
+    {
+        gameIsRunning = true;
         siren.Play();
     }
 
@@ -59,8 +133,9 @@ public class GameManager : MonoBehaviour
         
     }
 
-    public void GotPelletFromNodeController()
+    public void GotPelletFromNodeController(NodeController nodeController)
     {
+        nodeControllers.Add(nodeController);
         totalPellets++;
         pelletsLeft++;
     }

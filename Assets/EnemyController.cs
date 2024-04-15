@@ -27,6 +27,7 @@ public class EnemyController : MonoBehaviour
     }
 
     public GhostColour ghostColour;
+    public GhostNodeStatesEnum startGhostNodeState;
     public GhostNodeStatesEnum respawnState;
 
     public GameObject ghostNodeLeft;
@@ -53,21 +54,19 @@ public class EnemyController : MonoBehaviour
 
     void Awake()
     {
-        scatterNodeIndex = 0;
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         movementController = GetComponent<MovementController>();
 
         if (ghostColour == GhostColour.red)
         {
-            ghostNodeStates = GhostNodeStatesEnum.startNode;
+            startGhostNodeState = GhostNodeStatesEnum.startNode;
             respawnState = GhostNodeStatesEnum.centerNode;
             startingNode = ghostNodeStart;
-            readyToLeaveHome = true;
-            leftHomeBefore = true;
+            
         } 
         else if (ghostColour == GhostColour.pink)
         {
-            ghostNodeStates = GhostNodeStatesEnum.centerNode;
+            startGhostNodeState = GhostNodeStatesEnum.centerNode;
             startingNode = ghostNodeCenter;
             respawnState = GhostNodeStatesEnum.centerNode;
 
@@ -75,7 +74,7 @@ public class EnemyController : MonoBehaviour
         }
         else if (ghostColour == GhostColour.blue)
         {
-            ghostNodeStates = GhostNodeStatesEnum.leftNode;
+            startGhostNodeState = GhostNodeStatesEnum.leftNode;
             startingNode = ghostNodeLeft;
             respawnState = GhostNodeStatesEnum.leftNode;
 
@@ -83,13 +82,12 @@ public class EnemyController : MonoBehaviour
         }
         else if (ghostColour == GhostColour.orange)
         {
-            ghostNodeStates = GhostNodeStatesEnum.rightNode;
+            startGhostNodeState = GhostNodeStatesEnum.rightNode;
             startingNode = ghostNodeRight;
             respawnState = GhostNodeStatesEnum.rightNode;
 
         }
-        movementController.currentNode = startingNode;
-        transform.position = startingNode.transform.position;
+ 
     }
 
     // Start is called before the first frame update
@@ -98,9 +96,35 @@ public class EnemyController : MonoBehaviour
         
     }
 
+    public void Setup()
+    {
+        ghostNodeStates = startGhostNodeState;
+        movementController.currentNode = startingNode;
+        transform.position = startingNode.transform.position;
+
+        scatterNodeIndex = 0;
+
+        isFrightened = false;
+
+        if (ghostColour == GhostColour.red)
+        {
+            readyToLeaveHome = true;
+            leftHomeBefore = true;
+        }
+        else if (ghostColour == GhostColour.pink)
+        {
+            readyToLeaveHome = true;
+        }
+    }
+
     // Update is called once per frame
     void Update()
     {
+        if (!gameManager.gameIsRunning)
+        {
+            return;
+        }
+
         if (testRespawn)
         {
             ghostNodeStates = GhostNodeStatesEnum.respawning;

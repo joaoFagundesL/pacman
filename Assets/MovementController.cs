@@ -26,6 +26,12 @@ public class MovementController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+       // pacman nao ta movendo com essa parte do codigo (?)
+       // if (!gameManager.gameIsRunning)
+       // {
+       //     return;
+       // }
+
         NodeController currentNodeController = currentNode.GetComponent<NodeController>();
 
         // movimentação é com base no tempo do relógio para que computadores mais potentes não atualizem de forma diferente dos demais

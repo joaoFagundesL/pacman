@@ -7,16 +7,39 @@ public class PlayerController : MonoBehaviour
 
     MovementController movementController;
 
+    public GameObject startNode;
+
+    public Vector2 startPos;
+
+    public GameManager gameManager;
+
     // Start is called before the first frame update
     void Awake()
     {
+        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        startPos = new Vector2(-0.06f, -0.65f);
         movementController = GetComponent<MovementController>();
         movementController.lastMovingDirection = "left";
+
+        startNode = movementController.currentNode;
+    }
+
+    public void Setup()
+    {
+        movementController.currentNode = startNode;
+        movementController.lastMovingDirection = "left";
+        transform.position = startPos;
     }
 
     // Update is called once per frame
     void Update()
     {
+
+        if (!gameManager.gameIsRunning)
+        {
+            return;
+        }
+
         if(Input.GetKey(KeyCode.LeftArrow)){
             movementController.SetDirection("left");
         }
