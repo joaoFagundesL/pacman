@@ -27,10 +27,10 @@ public class MovementController : MonoBehaviour
     void Update()
     {
        // pacman nao ta movendo com essa parte do codigo (?)
-       // if (!gameManager.gameIsRunning)
-       // {
-       //     return;
-       // }
+        if (!gameManager.gameIsRunning)
+        {
+            return;
+        }
 
         NodeController currentNodeController = currentNode.GetComponent<NodeController>();
 

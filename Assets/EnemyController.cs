@@ -52,8 +52,15 @@ public class EnemyController : MonoBehaviour
 
     public bool leftHomeBefore = false;
 
+    public bool isVisible = true;
+
+    public SpriteRenderer ghostSprite;
+    public SpriteRenderer eyesSprite;
+
     void Awake()
     {
+        ghostSprite = GetComponent<SpriteRenderer>();
+
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         movementController = GetComponent<MovementController>();
 
@@ -121,11 +128,25 @@ public class EnemyController : MonoBehaviour
         {
             readyToLeaveHome = true;
         }
+        SetVisible(true);
     }
 
     // Update is called once per frame
     void Update()
     {
+
+        
+        //Mostra nossos sprites
+        if(isVisible){
+            ghostSprite.enabled = true;
+            eyesSprite.enabled = true;
+        }
+        //Esconde nossos sprites
+        else{
+            ghostSprite.enabled = false;
+            eyesSprite.enabled = false;
+        }  
+
         if (!gameManager.gameIsRunning)
         {
             return;
@@ -449,5 +470,24 @@ public class EnemyController : MonoBehaviour
         return newDirection;
 
     }
+
+    public void SetVisible(bool newIsVisible){
+        isVisible = newIsVisible;
+    } 
+
+    private void OnTriggerEnter2D(Collider2D collision){
+        if(collision.tag == "Player"){
+
+            //Ser comido
+            if (isFrightened){
+
+            }
+            //Comer jogador
+            else{
+                StartCoroutine(gameManager.PlayerEaten());
+            }
+
+        }
+    } 
 }
 

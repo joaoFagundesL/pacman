@@ -47,11 +47,14 @@ public class GameManager : MonoBehaviour
     public bool clearedLevel;
 
     public AudioSource startGameAudio;
+    public AudioSource death;
 
     public int lives;
     public int currentLevel;
 
     public Image blackBackground;
+
+    public Text gameOverText;
 
     public enum GhostMode
     {
@@ -72,14 +75,15 @@ public class GameManager : MonoBehaviour
         blueGhostController = blueGhost.GetComponent<EnemyController>();
         orangeGhostController = orangeGhost.GetComponent<EnemyController>();
         
-        // para permitir que o ghost possa identificar que há um node abaixo dele
+        // para permitir que o ghost possa identificar que hï¿½ um node abaixo dele
         ghostNodeStart.GetComponent<NodeController>().isGhostStartingNode = true;
-       // pacman = GameObject.Find("player");
+        //pacman = GameObject.Find("player");
         StartCoroutine(Setup());
     }
 
     public IEnumerator Setup()
     {
+        gameOverText.enabled = false;
         if (clearedLevel)
         {
             blackBackground.enabled = true;
@@ -89,7 +93,7 @@ public class GameManager : MonoBehaviour
         blackBackground.enabled = false;
 
         pelletsCollectedOnThisLife = 0;
-        currentGhostMode = GhostMode.scatter;
+        currentGhostMode = GhostMode.chase;
         gameIsRunning = false;
         currentMunch = 0;
 
@@ -98,7 +102,7 @@ public class GameManager : MonoBehaviour
         if (clearedLevel || newGame)
         {
             pelletsLeft = totalPellets;
-            waitTimer = 4f;
+            waitTimer = 0.0f; //Timer do incio do game, do delay para poder se mover
             for (int i = 0; i < nodeControllers.Count; i++)
             {
                 nodeControllers[i].RespawnPellet();
@@ -107,7 +111,7 @@ public class GameManager : MonoBehaviour
 
         if (newGame)
         {
-            //startGameAudio.Play(); da erro essa linha
+            //startGameAudio.Play(); error
             score = 0;
             scoreText.text = "Score: " + score.ToString();
             lives = 3;
@@ -214,5 +218,33 @@ public class GameManager : MonoBehaviour
             StartCoroutine(Setup());
         }
 
+    }
+    public IEnumerator PlayerEaten(){
+        
+        hadDeathOnThisLevel = true;
+        StopGame();
+        yield return new WaitForSeconds(1); 
+
+        
+        redGhostController.SetVisible(false);
+        pinkGhostController.SetVisible(false);
+        blueGhostController.SetVisible(false);
+        orangeGhostController.SetVisible(false); 
+    
+        pacman.GetComponent<PlayerController>().Death();
+        death.Play();
+        yield return new WaitForSeconds(3); 
+
+        
+        lives--;
+        if(lives <= 0){
+            newGame = true;
+            //Texto de Game Over
+            gameOverText.enabled = true;
+            yield return new WaitForSeconds(3);
+        }
+
+        StartCoroutine(Setup());
+        
     }
 }

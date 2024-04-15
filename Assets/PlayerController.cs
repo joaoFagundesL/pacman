@@ -27,8 +27,8 @@ public class PlayerController : MonoBehaviour
     public void Setup()
     {
         movementController.currentNode = startNode;
-        movementController.direction = "left";
-        movementController.lastMovingDirection = "left";
+        movementController.direction = "";
+        movementController.lastMovingDirection = "";
         transform.position = startPos;
     }
 
@@ -58,5 +58,10 @@ public class PlayerController : MonoBehaviour
         if(Input.GetKey(KeyCode.DownArrow)){
             movementController.SetDirection("down");
         }
+    } 
+
+    public void Death(){
+        //animator.SetBool("moving", false);
+        //animator.SetBool("dead", true);
     }
 }
