@@ -123,21 +123,7 @@ public class EnemyController : MonoBehaviour
 
             if (gameManager.currentGhostMode == GameManager.GhostMode.scatter)
             {
-
-                if (transform.position.x == scatterNodes[scatterNodeIndex].transform.position.x && transform.position.y == scatterNodes[scatterNodeIndex].transform.position.y)
-                {
-                    scatterNodeIndex++;
-
-                    if (scatterNodeIndex == scatterNodes.Length - 1)
-                    {
-                        scatterNodeIndex = 0;
-                    }
-                }
-
-                string direction = GetClosestDirection(scatterNodes[scatterNodeIndex].transform.position);
-
-                movementController.SetDirection(direction);
- 
+                DetermineGhostScatterModeDirection();
             }
             else if (isFrightened)
             {
@@ -233,6 +219,24 @@ public class EnemyController : MonoBehaviour
             }
         }
     }
+
+    void DetermineGhostScatterModeDirection()
+    {
+        if (transform.position.x == scatterNodes[scatterNodeIndex].transform.position.x && transform.position.y == scatterNodes[scatterNodeIndex].transform.position.y)
+        {
+            scatterNodeIndex++;
+
+            if (scatterNodeIndex == scatterNodes.Length - 1)
+            {
+                scatterNodeIndex = 0;
+            }
+        }
+
+        string direction = GetClosestDirection(scatterNodes[scatterNodeIndex].transform.position);
+
+        movementController.SetDirection(direction);
+    }
+
     void DetermineRedGhostDirection()
     {
         string direction = GetClosestDirection(gameManager.pacman.transform.position);
@@ -301,7 +305,23 @@ public class EnemyController : MonoBehaviour
 
     void DetermineOrangeGhostDirection()
     {
+        float distance = Vector2.Distance(gameManager.pacman.transform.position, transform.position);
+        float distanceBetweenNodes = 0.35f;
 
+        if (distance < 0)
+        {
+            distance *= -1;
+        }
+
+        if (distance <= distanceBetweenNodes * 8)
+        {
+            DetermineRedGhostDirection();
+        }
+        
+        else
+        {
+            DetermineGhostScatterModeDirection();
+        }
     }
 
     string GetClosestDirection(Vector2 target) 
