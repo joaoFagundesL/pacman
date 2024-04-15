@@ -35996,12 +35996,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ff743a83a9cf35458a80ab679aee62b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameManager: {fileID: 0}
-  currentNode: {fileID: 0}
-  speed: 3
-  direction: 
-  lastMovingDirection: 
+  gameManager: {fileID: 1467770299}
+  currentNode: {fileID: 97565536}
+  speed: 1
+  direction: up
+  lastMovingDirection: up
   canWarp: 1
+  isGhost: 1
 --- !u!114 &1195641743
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -36014,14 +36015,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7023f7647a33f8f4b85c3f81aa17f21a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ghostNodeStatesEnum: 0
-  ghostColour: 0
+  ghostNodeStates: 0
+  ghostColour: 3
   ghostNodeLeft: {fileID: 1579744554}
   ghostNodeCenter: {fileID: 61518921}
   ghostNodeRight: {fileID: 65905395}
   ghostNodeStart: {fileID: 97565536}
-  movementController: {fileID: 0}
-  startingNode: {fileID: 0}
+  movementController: {fileID: 1195641742}
+  startingNode: {fileID: 1579744554}
+  readyToLeaveHome: 0
+  gameManager: {fileID: 0}
 --- !u!4 &1195641744
 Transform:
   m_ObjectHideFlags: 0
@@ -41302,6 +41305,7 @@ MonoBehaviour:
   direction: 
   lastMovingDirection: left
   canWarp: 1
+  isGhost: 0
 --- !u!114 &1381854681
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -44163,6 +44167,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6323c6bfa3e0ec74293f593a7a241237, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pacman: {fileID: 1381854679}
   leftWarpNode: {fileID: 504709743}
   rightWarpNode: {fileID: 1737100351}
   siren: {fileID: 1467770300}

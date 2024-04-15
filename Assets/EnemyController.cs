@@ -39,8 +39,11 @@ public class EnemyController : MonoBehaviour
 
     public bool readyToLeaveHome = false;
 
+    public GameManager gameManager;
+
     void Awake()
     {
+        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         movementController = GetComponent<MovementController>();
 
         if (ghostColour == GhostColour.red)
@@ -65,7 +68,11 @@ public class EnemyController : MonoBehaviour
             ghostNodeStates = GhostNodeStatesEnum.rightNode;
             startingNode = ghostNodeRight;
         }
+
         movementController.currentNode = startingNode;
+
+        // ghost começar no lugar certo
+        transform.position = startingNode.transform.position;
     }
 
     // Start is called before the first frame update
@@ -84,7 +91,10 @@ public class EnemyController : MonoBehaviour
     {
         if (ghostNodeStates == GhostNodeStatesEnum.movingInNodes)
         {
-
+            if (ghostColour == GhostColour.red)
+            {
+                DetermineRedGhostDirection();
+            }
         }
         else if (ghostNodeStates == GhostNodeStatesEnum.respawning)
         {
@@ -120,4 +130,86 @@ public class EnemyController : MonoBehaviour
             }
         }
     }
+    void DetermineRedGhostDirection()
+    {
+        string direction = GetClosestDirection(gameManager.pacman.transform.position);
+        movementController.SetDirection(direction);
+    }
+
+    void DeterminePinkGhostDirection()
+    {
+
+    }
+
+    void DetermineBlueGhostDirection()
+    {
+
+    }
+
+    void DetermineOrangeGhostDirection()
+    {
+
+    }
+
+    string GetClosestDirection(Vector2 target) 
+    {
+        float shortestDistance = 0;
+        string lastMovingDirection = movementController.lastMovingDirection;
+        string newDirection = "";
+
+        NodeController nodeController = movementController.currentNode.GetComponent<NodeController>();
+
+        if (nodeController.canMoveUp && lastMovingDirection != "down") 
+        {
+            GameObject nodeUp = nodeController.nodeUp;
+            float distance = Vector2.Distance(nodeUp.transform.position, target);
+
+            if (distance < shortestDistance || shortestDistance == 0)
+            {
+                shortestDistance = distance;
+                newDirection = "up";
+            }
+        }
+
+
+        if (nodeController.canMoveDown && lastMovingDirection != "up") 
+        {
+            GameObject nodeDown = nodeController.nodeDown;
+            float distance = Vector2.Distance(nodeDown.transform.position, target);
+
+            if (distance < shortestDistance || shortestDistance == 0)
+            {
+                shortestDistance = distance;
+                newDirection = "down";
+            }
+        }
+
+        if (nodeController.canMoveLeft && lastMovingDirection != "right") 
+        {
+            GameObject nodeLeft = nodeController.nodeLeft;
+            float distance = Vector2.Distance(nodeLeft.transform.position, target);
+
+            if (distance < shortestDistance || shortestDistance == 0)
+            {
+                shortestDistance = distance;
+                newDirection = "left";
+            }
+        }
+
+        if (nodeController.canMoveRight && lastMovingDirection != "left") 
+        {
+            GameObject nodeRight = nodeController.nodeRight;
+            float distance = Vector2.Distance(nodeRight.transform.position, target);
+
+            if (distance < shortestDistance || shortestDistance == 0)
+            {
+                shortestDistance = distance;
+                newDirection = "right";
+            }
+        }
+
+        return newDirection;
+
+    }
 }
+
