@@ -71,6 +71,7 @@ public class MovementController : MonoBehaviour
             // se não, encontra o proximo node que irá se mover
             else
             {
+                // impedir que o pacman entre no respawn do fantasma, ou seja se eu nao for um fantasma com estado de respawn tentando ir para baixo
                 if (currentNodeController.isGhostStartingNode && direction == "down" &&
                     (!isGhost || GetComponent<EnemyController>().ghostNodeStates != EnemyController.GhostNodeStatesEnum.respawning))
                 {
@@ -100,6 +101,12 @@ public class MovementController : MonoBehaviour
             canWarp = true;
         }
     }
+
+    public void SetSpeed(float newSpeed)
+    {
+        speed = newSpeed;
+    }
+
 
     public void SetDirection(string newDirection){
         direction = newDirection;

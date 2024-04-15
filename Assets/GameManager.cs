@@ -23,9 +23,22 @@ public class GameManager : MonoBehaviour
     public GameObject ghostNodeRight;
     public GameObject ghostNodeStart;
 
+    public GameObject redGhost;
+    public GameObject blueGhost;
+    public GameObject pinkGhost;
+    public GameObject orangeGhost;
+
+    public enum GhostMode
+    {
+        chase, scatter
+    }
+
+    public GhostMode currentGhostMode;
+
     // Start is called before the first frame update
     void Awake()
     {
+        currentGhostMode = GhostMode.chase;
         // para permitir que o ghost possa identificar que há um node abaixo dele
         ghostNodeStart.GetComponent<NodeController>().isGhostStartingNode = true;
         score = 0;

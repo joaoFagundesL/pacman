@@ -44,8 +44,14 @@ public class EnemyController : MonoBehaviour
 
     public bool testRespawn = false;
 
+    public bool isFrightened = false;
+
+    public GameObject[] scatterNodes;
+    public int scatterNodeIndex;
+
     void Awake()
     {
+        scatterNodeIndex = 0;
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         movementController = GetComponent<MovementController>();
 
@@ -97,16 +103,65 @@ public class EnemyController : MonoBehaviour
             ghostNodeStates = GhostNodeStatesEnum.respawning;
             testRespawn = false;
         }
-        
+
+        if (movementController.currentNode.GetComponent<NodeController>().isSideNode) 
+        {
+            movementController.SetSpeed(1);
+        }
+        else
+        {
+            movementController.SetSpeed(1);
+
+        }
+
     }
 
     public void ReachedCenteOfNode(NodeController nodeController)
     {
         if (ghostNodeStates == GhostNodeStatesEnum.movingInNodes)
         {
-            if (ghostColour == GhostColour.red)
+
+            if (gameManager.currentGhostMode == GameManager.GhostMode.scatter)
             {
-                DetermineRedGhostDirection();
+
+                if (transform.position.x == scatterNodes[scatterNodeIndex].transform.position.x && transform.position.y == scatterNodes[scatterNodeIndex].transform.position.y)
+                {
+                    scatterNodeIndex++;
+
+                    if (scatterNodeIndex == scatterNodes.Length - 1)
+                    {
+                        scatterNodeIndex = 0;
+                    }
+                }
+
+                string direction = GetClosestDirection(scatterNodes[scatterNodeIndex].transform.position);
+
+                movementController.SetDirection(direction);
+ 
+            }
+            else if (isFrightened)
+            {
+
+            }
+            else
+            {
+                if (ghostColour == GhostColour.red)
+                {
+                    DetermineRedGhostDirection();
+                }
+                else if (ghostColour == GhostColour.pink)
+                {
+                    DeterminePinkGhostDirection();
+                }
+                else if (ghostColour == GhostColour.blue)
+                {
+                    DetermineBlueGhostDirection();
+                }
+                else if (ghostColour == GhostColour.orange)
+                {
+                    DetermineOrangeGhostDirection();
+                }
+
             }
         }
         else if (ghostNodeStates == GhostNodeStatesEnum.respawning)
@@ -134,6 +189,7 @@ public class EnemyController : MonoBehaviour
                     direction = "right";
                 }
             }
+
             else if (
                 (transform.position.x == ghostNodeLeft.transform.position.x && transform.position.y == ghostNodeLeft.transform.position.y)
                 || (transform.position.x == ghostNodeRight.transform.position.x && transform.position.y == ghostNodeRight.transform.position.y)
@@ -185,11 +241,61 @@ public class EnemyController : MonoBehaviour
 
     void DeterminePinkGhostDirection()
     {
+        string pacmansDirection = gameManager.pacman.GetComponent<MovementController>().lastMovingDirection;
+        float distanceBetweenNodes = 0.35f;
 
+        Vector2 target = gameManager.pacman.transform.position;
+        if (pacmansDirection == "left")
+        {
+            target.x -= (distanceBetweenNodes * 2);
+        }
+        else if (pacmansDirection == "right")
+        {
+            target.x += (distanceBetweenNodes * 2);
+        }
+        else if (pacmansDirection == "up")
+        {
+            target.y += (distanceBetweenNodes * 2);
+        }
+        else if (pacmansDirection == "down")
+        {
+            target.y -= distanceBetweenNodes * 2;
+        }
+
+        string direction = GetClosestDirection(target);
+        movementController.SetDirection(direction);
     }
 
     void DetermineBlueGhostDirection()
     {
+        string pacmansDirection = gameManager.pacman.GetComponent<MovementController>().lastMovingDirection;
+        float distanceBetweenNodes = 0.35f;
+
+        Vector2 target = gameManager.pacman.transform.position;
+        if (pacmansDirection == "left")
+        {
+            target.x -= (distanceBetweenNodes * 2);
+        }
+        else if (pacmansDirection == "right")
+        {
+            target.x += (distanceBetweenNodes * 2);
+        }
+        else if (pacmansDirection == "up")
+        {
+            target.y += (distanceBetweenNodes * 2);
+        }
+        else if (pacmansDirection == "down")
+        {
+            target.y -= distanceBetweenNodes * 2;
+        }
+
+        GameObject redGhost = gameManager.redGhost;
+        float xDistance = target.x - redGhost.transform.position.x;
+        float yDistance = target.y - redGhost.transform.position.y;
+
+        Vector2 blueTarget = new Vector2(target.x + xDistance, target.y + yDistance);
+        string direction = GetClosestDirection(blueTarget);
+        movementController.SetDirection(direction);
 
     }
 
