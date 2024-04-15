@@ -71,6 +71,12 @@ public class MovementController : MonoBehaviour
             // se não, encontra o proximo node que irá se mover
             else
             {
+                if (currentNodeController.isGhostStartingNode && direction == "down" &&
+                    (!isGhost || GetComponent<EnemyController>().ghostNodeStates != EnemyController.GhostNodeStatesEnum.respawning))
+                {
+                    direction = lastMovingDirection;
+                }
+
                 //Pegar o próximo node
                 GameObject newNode = currentNodeController.GetNodeFromDirection(direction);
                 if (newNode != null)

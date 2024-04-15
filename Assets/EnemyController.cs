@@ -27,6 +27,7 @@ public class EnemyController : MonoBehaviour
     }
 
     public GhostColour ghostColour;
+    public GhostNodeStatesEnum respawnState;
 
     public GameObject ghostNodeLeft;
     public GameObject ghostNodeCenter;
@@ -41,6 +42,8 @@ public class EnemyController : MonoBehaviour
 
     public GameManager gameManager;
 
+    public bool testRespawn = false;
+
     void Awake()
     {
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
@@ -49,29 +52,34 @@ public class EnemyController : MonoBehaviour
         if (ghostColour == GhostColour.red)
         {
             ghostNodeStates = GhostNodeStatesEnum.startNode;
+            respawnState = GhostNodeStatesEnum.centerNode;
             startingNode = ghostNodeStart;
+            readyToLeaveHome = true;
         } 
         else if (ghostColour == GhostColour.pink)
         {
             ghostNodeStates = GhostNodeStatesEnum.centerNode;
             startingNode = ghostNodeCenter;
+            respawnState = GhostNodeStatesEnum.centerNode;
+
 
         }
         else if (ghostColour == GhostColour.blue)
         {
             ghostNodeStates = GhostNodeStatesEnum.leftNode;
             startingNode = ghostNodeLeft;
+            respawnState = GhostNodeStatesEnum.leftNode;
+
 
         }
         else if (ghostColour == GhostColour.orange)
         {
             ghostNodeStates = GhostNodeStatesEnum.rightNode;
             startingNode = ghostNodeRight;
+            respawnState = GhostNodeStatesEnum.rightNode;
+
         }
-
         movementController.currentNode = startingNode;
-
-        // ghost começar no lugar certo
         transform.position = startingNode.transform.position;
     }
 
@@ -84,6 +92,11 @@ public class EnemyController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (testRespawn)
+        {
+            ghostNodeStates = GhostNodeStatesEnum.respawning;
+            testRespawn = false;
+        }
         
     }
 
@@ -98,7 +111,41 @@ public class EnemyController : MonoBehaviour
         }
         else if (ghostNodeStates == GhostNodeStatesEnum.respawning)
         {
+            string direction = "";
+            // alcancou o centro, move para baixo
+            if (transform.position.x == ghostNodeStart.transform.position.x && transform.position.y == ghostNodeStart.transform.position.y)
+            {
+                direction = "down";
+            }
 
+            // alcancou o centro, ou termina respawn ou move left/right (depende da cor do fantasma)
+            else if(transform.position.x == ghostNodeCenter.transform.position.x && transform.position.y == ghostNodeCenter.transform.position.y)
+            {
+                if (respawnState == GhostNodeStatesEnum.centerNode)
+                {
+                    ghostNodeStates = respawnState;
+                }
+                else if (respawnState == GhostNodeStatesEnum.leftNode)
+                {
+                    direction = "left";
+                }
+                else if (respawnState == GhostNodeStatesEnum.rightNode)
+                {
+                    direction = "right";
+                }
+            }
+            else if (
+                (transform.position.x == ghostNodeLeft.transform.position.x && transform.position.y == ghostNodeLeft.transform.position.y)
+                || (transform.position.x == ghostNodeRight.transform.position.x && transform.position.y == ghostNodeRight.transform.position.y)
+                )
+            {
+                ghostNodeStates = respawnState;
+            }
+            else
+            {
+                direction = GetClosestDirection(ghostNodeStart.transform.position);
+            }
+            movementController.SetDirection(direction);
         }
         else
         {

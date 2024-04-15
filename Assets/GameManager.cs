@@ -18,9 +18,16 @@ public class GameManager : MonoBehaviour
     public int score;
     public Text scoreText;
 
+    public GameObject ghostNodeLeft;
+    public GameObject ghostNodeCenter;
+    public GameObject ghostNodeRight;
+    public GameObject ghostNodeStart;
+
     // Start is called before the first frame update
     void Awake()
     {
+        // para permitir que o ghost possa identificar que há um node abaixo dele
+        ghostNodeStart.GetComponent<NodeController>().isGhostStartingNode = true;
         score = 0;
         currentMunch = 0;
         siren.Play();

@@ -22,9 +22,12 @@ public class NodeController : MonoBehaviour
     // se o nó ainda tem um pellet
     public bool hasPellet = false;
 
+    public bool isGhostStartingNode = false;
+
     public SpriteRenderer pelletSprite;
 
     public GameManager gameManager;
+
 
     // Start is called before the first frame update
     void Awake()
@@ -86,6 +89,14 @@ public class NodeController : MonoBehaviour
                 canMoveLeft = true;
                 nodeLeft = hitsLeft[i].collider.gameObject;
             }
+        }
+
+        // quando o ghost atingir o starting node ele entra na home
+        if (isGhostStartingNode)
+        {
+            canMoveDown = true;
+            // o center é o node abaixo do starting, permitindo que ele entre no respawn novamente
+            nodeDown = gameManager.ghostNodeCenter;
         }
     }
 

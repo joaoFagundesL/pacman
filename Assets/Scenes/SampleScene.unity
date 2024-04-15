@@ -2325,7 +2325,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   canMoveLeft: 1
-  canMoveRight: 0
+  canMoveRight: 1
   canMoveUp: 0
   canMoveDown: 0
   nodeLeft: {fileID: 61518921}
@@ -35997,10 +35997,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 1467770299}
-  currentNode: {fileID: 97565536}
+  currentNode: {fileID: 65905395}
   speed: 1
-  direction: up
-  lastMovingDirection: up
+  direction: 
+  lastMovingDirection: 
   canWarp: 1
   isGhost: 1
 --- !u!114 &1195641743
@@ -36015,16 +36015,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7023f7647a33f8f4b85c3f81aa17f21a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ghostNodeStates: 0
-  ghostColour: 3
+  ghostNodeStates: 5
+  ghostColour: 0
   ghostNodeLeft: {fileID: 1579744554}
   ghostNodeCenter: {fileID: 61518921}
   ghostNodeRight: {fileID: 65905395}
   ghostNodeStart: {fileID: 97565536}
   movementController: {fileID: 1195641742}
-  startingNode: {fileID: 1579744554}
+  startingNode: {fileID: 65905395}
   readyToLeaveHome: 0
-  gameManager: {fileID: 0}
+  gameManager: {fileID: 1467770299}
+  testRespawn: 0
 --- !u!4 &1195641744
 Transform:
   m_ObjectHideFlags: 0
