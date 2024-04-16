@@ -17,9 +17,9 @@ public class NodeController : MonoBehaviour
     public bool isWarpRightNode = false;
     public bool isWarpLeftNode = false;
 
-    // se o nó tem um pellet quando o jogo inicia
+    // se o nï¿½ tem um pellet quando o jogo inicia
     public bool isPelletNode = false;
-    // se o nó ainda tem um pellet
+    // se o nï¿½ ainda tem um pellet
     public bool hasPellet = false;
 
     public bool isGhostStartingNode = false;
@@ -29,6 +29,10 @@ public class NodeController : MonoBehaviour
     public GameManager gameManager;
 
     public bool isSideNode = false;
+
+    public bool isPowerPellet = false;
+
+    public float powerPelletBlinkingTime = 0;
 
 
     // Start is called before the first frame update
@@ -98,7 +102,7 @@ public class NodeController : MonoBehaviour
         if (isGhostStartingNode)
         {
             canMoveDown = true;
-            // o center é o node abaixo do starting, permitindo que ele entre no respawn novamente
+            // o center ï¿½ o node abaixo do starting, permitindo que ele entre no respawn novamente
             nodeDown = gameManager.ghostNodeCenter;
         }
     }
@@ -106,6 +110,17 @@ public class NodeController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if(!gameManager.gameIsRunning){
+            return;
+        }
+
+        if(isPowerPellet && hasPellet){
+            powerPelletBlinkingTime += Time.deltaTime;
+            if(powerPelletBlinkingTime >= 0.1f){
+                powerPelletBlinkingTime = 0;
+                pelletSprite.enabled = !pelletSprite.enabled;
+            }
+        }
         
     }
 
