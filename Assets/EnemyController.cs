@@ -104,11 +104,27 @@ public class EnemyController : MonoBehaviour
  
     }
 
-    // Start is called before the first frame update
     void Start()
+    { 
+        StartCoroutine(DetermineRedGhostDirectionCoroutine());
+    }
+
+    private IEnumerator DetermineRedGhostDirectionCoroutine()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(10f);
+
+            Teste(); // Chama a função para determinar a direção
+            // Aguarda 30 segundos antes de chamar novamente a função
+        }
+    }
+
+
+    public void Teste()
     {
         int[][] level = new int[][]
-        {
+       {//27
               new int[] { 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4 },
               new int[] { 4, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 4, 4, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 4 },
               new int[] { 4, 1, 4, 4, 4, 4, 1, 4, 4, 4, 4, 4, 1, 4, 4, 1, 4, 4, 4, 4, 4, 1, 4, 4, 4, 4, 1, 4 },
@@ -140,21 +156,25 @@ public class EnemyController : MonoBehaviour
               new int[] { 4, 1, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 1, 4, 4, 1, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 1, 4 },
               new int[] { 4, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 4 },
               new int[] { 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4 },
-        };
+       };
 
-        int xp = (int) GetXPacmanMatrixPosition();
-        int yp = (int) GetYPacmanMatrixPosition();
+        double xp = GetXPacmanMatrixPosition();
+        double yp = GetYPacmanMatrixPosition();
 
-        int xr = (int) GetXRedGhostMatrixPosition();
-        int yr = (int) GetYRedGhostMatrixPosition();
+        double xr = GetXRedGhostMatrixPosition();
+        double yr = GetYRedGhostMatrixPosition();
 
+        Debug.Log("calculou");
 
-        Node startNode = new Node(xp, yp);
-        Node goalNode = new Node(xr, yr);
+        /*  Debug.Log(xp);
+          Debug.Log(yp);
 
-        List<Node> path = AStar.FindPath(level, startNode, goalNode);
+          Debug.Log(xr);
+          Debug.Log(yr);*/
 
-        if (path != null)
+         List<Node> path = AStar.FindPath(level, (int)xr, (int)yr, (int)xp, (int)yp);
+
+       /* if (path != null)
         {
             Debug.Log("Caminho encontrado:");
             foreach (var node in path)
@@ -165,8 +185,7 @@ public class EnemyController : MonoBehaviour
         else
         {
             Debug.Log("Caminho não encontrado.");
-        }
-
+        }*/
     }
 
     public void Setup()
@@ -425,7 +444,9 @@ public class EnemyController : MonoBehaviour
             possibleX *= -1;
         }
 
+
         double xMatrix = Math.Ceiling(possibleX);
+        Debug.Log("x pacman = " + xMatrix);
         return xMatrix;
     }
 
@@ -444,6 +465,8 @@ public class EnemyController : MonoBehaviour
         }
 
         double yMatrix = Math.Ceiling(possibleY);
+        Debug.Log("y pacman = " + yMatrix);
+
         return yMatrix;
     }
 
@@ -461,6 +484,8 @@ public class EnemyController : MonoBehaviour
             possibleY *= -1;
         }
         double yMatrix = Math.Ceiling(possibleY);
+        Debug.Log("x red ghost = " + yMatrix);
+
         return yMatrix;
 
     }
@@ -480,6 +505,8 @@ public class EnemyController : MonoBehaviour
         }
 
         double xMatrix = Math.Ceiling(possibleX);
+        Debug.Log("x red ghost = " + xMatrix);
+
         return xMatrix;
     }
 
@@ -700,23 +727,36 @@ public class Node : IComparable<Node>
 
 public class AStar
 {
-    private static readonly int[][] directions = { new int[] { -1, 0 }, new int[] { 1, 0 }, new int[] { 0, -1 }, new int[] { 0, 1 } };  // Movements: up, down, left, right
-
-    public static List<Node> FindPath(int[][] level, Node start, Node goal)
+    public static List<Node> FindPath(int[][] level, int startX, int startY, int goalX, int goalY)
     {
-        SortedSet<Node> openList = new SortedSet<Node>();  // Priority queue for open nodes
-        HashSet<Node> closedSet = new HashSet<Node>();     // Set of visited nodes
+        int[][] directions = { new int[] { -1, 0 }, new int[] { 1, 0 }, new int[] { 0, -1 }, new int[] { 0, 1 } };
 
-        openList.Add(start);
+        if (startX > 27 || startY > 31 || goalX > 27 || goalY > 31)
+        {
+            Debug.Log("valor maior q index");
+        }
+
+
+        if (startX < 0 || startY < 0 || goalX < 0 || goalY < 0) 
+        {
+            Debug.Log("valor < 0");
+        }
+
+        SortedSet<Node> openList = new SortedSet<Node>();
+        HashSet<Node> closedSet = new HashSet<Node>();
+
+        Node startNode = new Node(startX, startY);
+        Node goalNode = new Node(goalX, goalY);
+
+        openList.Add(startNode);
 
         while (openList.Count > 0)
         {
             Node current = openList.Min;
             openList.Remove(current);
 
-            if (current.x == goal.x && current.y == goal.y)
+            if (current.x == goalNode.x && current.y == goalNode.y)
             {
-                // Path found, reconstruct and return the path
                 return ReconstructPath(current);
             }
 
@@ -730,12 +770,12 @@ public class AStar
                 if (IsValidMove(level, newX, newY))
                 {
                     Node neighbor = new Node(newX, newY);
+
                     if (!closedSet.Contains(neighbor))
                     {
-                        int newG = current.g + 1;  // Accumulated cost
-
+                        int newG = current.g + 1;
                         neighbor.g = newG;
-                        neighbor.h = CalculateHeuristic(neighbor, goal);
+                        neighbor.h = CalculateHeuristic(neighbor, goalNode);
                         neighbor.f = newG + neighbor.h;
                         neighbor.parent = current;
 
@@ -748,15 +788,29 @@ public class AStar
             }
         }
 
-        return null;  // Path not found
+        return null; // Se o loop terminar sem encontrar o caminho
     }
 
     private static bool IsValidMove(int[][] level, int x, int y)
     {
         int numRows = level.Length;
+        if (numRows == 0 || x < 0 || x >= numRows)
+        {
+            Debug.Log("AAAAAAAA");
+            return false;
+
+        }
+
         int numCols = level[0].Length;
-        return x >= 0 && x < numRows && y >= 0 && y < numCols && level[x][y] != 4;  // Check bounds and not a wall
+        if (numCols == 0 || y < 0 || y >= numCols)
+        {
+            Debug.Log("AAAAAAAA");
+            return false;
+        }
+
+        return level[x][y] != 4;  // Verifica se não é uma parede
     }
+
 
     private static int CalculateHeuristic(Node current, Node goal)
     {
