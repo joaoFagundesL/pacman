@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
+using System;
 using static EnemyController;
 
 public class EnemyController : MonoBehaviour
@@ -105,7 +107,59 @@ public class EnemyController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        int[][] level = new int[][]
+        {
+              new int[] = { 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4 },
+              new int[] ={ 4, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 4, 4, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 4 },
+              new int[] ={ 4, 1, 4, 4, 4, 4, 1, 4, 4, 4, 4, 4, 1, 4, 4, 1, 4, 4, 4, 4, 4, 1, 4, 4, 4, 4, 1, 4 },
+              new int[] ={ 4, 2, 4, 0, 0, 4, 1, 4, 0, 0, 0, 4, 1, 4, 4, 1, 4, 0, 0, 0, 4, 1, 4, 0, 0, 4, 2, 4 },
+              new int[] ={ 4, 1, 4, 4, 4, 4, 1, 4, 4, 4, 4, 4, 1, 4, 4, 1, 4, 4, 4, 4, 4, 1, 4, 4, 4, 4, 1, 4 },
+              new int[] ={ 4, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 4 },
+              new int[] ={ 4, 1, 4, 4, 4, 4, 1, 4, 4, 1, 4, 4, 4, 4, 4, 4, 4, 1, 1, 4, 4, 1, 4, 4, 4, 4, 1, 4 },
+              new int[] ={ 4, 1, 4, 4, 4, 4, 1, 4, 4, 1, 4, 4, 4, 4, 4, 4, 4, 4, 1, 4, 4, 1, 4, 4, 4, 4, 1, 4 },
+              new int[] ={ 4, 1, 1, 1, 1, 1, 1, 4, 4, 1, 1, 1, 1, 4, 4, 1, 1, 1, 1, 4, 4, 1, 1, 1, 1, 1, 1, 4 },
+              new int[] ={ 4, 4, 4, 4, 4, 4, 1, 4, 4, 4, 4, 4, 1, 4, 4, 1, 4, 4, 4, 4, 4, 1, 4, 4, 4, 4, 4, 4 },
+              new int[] ={ 4, 4, 4, 4, 4, 4, 1, 4, 4, 4, 4, 4, 1, 4, 4, 1, 4, 4, 4, 4, 4, 1, 4, 4, 4, 4, 4, 4 },
+              new int[] ={ 4, 4, 4, 4, 4, 4, 1, 4, 4, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 4, 4, 1, 4, 4, 4, 4, 4, 4 },
+              new int[] ={ 4, 4, 4, 4, 4, 4, 1, 4, 4, 1, 4, 4, 4, 4, 4, 4, 4, 4, 1, 4, 4, 1, 4, 4, 4, 4, 4, 4 },
+              new int[] ={ 4, 4, 4, 4, 4, 4, 1, 4, 4, 1, 4, 4, 4, 4, 4, 4, 4, 4, 1, 4, 4, 1, 4, 4, 4, 4, 4, 4 },
+              new int[] ={ 0, 0, 0, 0, 0, 0, 1, 4, 4, 1, 4, 4, 4, 4, 4, 4, 4, 4, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0 },
+              new int[] ={ 4, 4, 4, 4, 4, 4, 1, 4, 4, 1, 4, 4, 4, 4, 4, 4, 4, 4, 1, 4, 4, 1, 4, 4, 4, 4, 4, 4 },
+              new int[] ={ 4, 4, 4, 4, 4, 4, 1, 4, 4, 1, 4, 4, 4, 4, 4, 4, 4, 4, 1, 4, 4, 1, 4, 4, 4, 4, 4, 4 },
+              new int[] ={ 4, 4, 4, 4, 4, 4, 1, 4, 4, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 4, 4, 1, 4, 4, 4, 4, 4, 4 },
+              new int[] ={ 4, 4, 4, 4, 4, 4, 1, 4, 4, 1, 4, 4, 4, 4, 4, 4, 4, 4, 1, 4, 4, 1, 4, 4, 4, 4, 4, 4 },
+              new int[] ={ 4, 4, 4, 4, 4, 4, 1, 4, 4, 1, 4, 4, 4, 4, 4, 4, 4, 4, 1, 4, 4, 1, 4, 4, 4, 4, 4, 4 },
+              new int[] ={ 4, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 4, 4, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 4 },
+              new int[] ={ 4, 1, 4, 4, 4, 4, 1, 4, 4, 4, 4, 4, 1, 4, 4, 1, 4, 4, 4, 4, 4, 1, 4, 4, 4, 4, 1, 4 },
+              new int[] ={ 4, 1, 4, 4, 4, 4, 1, 4, 4, 4, 4, 4, 1, 4, 4, 1, 4, 4, 4, 4, 4, 1, 4, 4, 4, 4, 1, 4 },
+              new int[] ={ 4, 1, 1, 1, 4, 4, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 4, 4, 1, 1, 1, 4 },
+              new int[] ={ 4, 4, 4, 1, 4, 4, 1, 4, 4, 1, 4, 4, 4, 4, 4, 4, 4, 4, 1, 4, 4, 1, 4, 4, 1, 4, 4, 4 },
+              new int[] ={ 4, 4, 4, 1, 4, 4, 1, 4, 4, 1, 4, 4, 4, 4, 4, 4, 4, 4, 1, 4, 4, 1, 4, 4, 1, 4, 4, 4 },
+              new int[] ={ 4, 1, 1, 1, 1, 1, 1, 4, 4, 1, 1, 1, 1, 4, 4, 1, 1, 1, 1, 4, 4, 1, 1, 1, 1, 1, 1, 4 },
+              new int[] ={ 4, 1, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 1, 4, 4, 1, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 1, 4 },
+              new int[] ={ 4, 1, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 1, 4, 4, 1, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 1, 4 },
+              new int[] ={ 4, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 4 },
+              new int[] ={ 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4 },
+        };
+
+        Node startNode = new Node(3, 1);
+        Node goalNode = new Node(1, 1);
+
+        List<Node> path = AStar.FindPath(level, startNode, goalNode);
+
+        if (path != null)
+        {
+            Debug.Log("Caminho encontrado:");
+            foreach (var node in path)
+            {
+                Debug.Log($"({node.x}, {node.y})");
+            }
+        }
+        else
+        {
+            Debug.Log("Caminho não encontrado.");
+        }
+
     }
 
     public void Setup()
@@ -350,6 +404,68 @@ public class EnemyController : MonoBehaviour
 
     }
 
+    void GetXPacmanMatrixPosition()
+    {
+        string pacmansDirection = gameManager.pacman.GetComponent<MovementController>().lastMovingDirection;
+
+        double xInicial = -3.74f;
+        double x = gameManager.pacman.transform.position.x;
+
+        double possibleX = (xInicial - x) / 0.3;
+
+        if (possibleX < 0)
+        {
+            possibleX *= -1;
+        }
+
+        double xMatrix = Math.Ceiling(possibleX);
+        return xMatrix;
+    }
+
+    int GetYPacmanMatrixPosition()
+    {
+        string pacmansDirection = gameManager.pacman.GetComponent<MovementController>().lastMovingDirection;
+
+        double yInicial = -4.21f;
+        double y = gameManager.pacman.transform.position.y;
+
+        double possibleY = (yInicial - y) / 0.3;
+
+        if (possibleY < 0)
+        {
+            possibleY *= -1;
+        }
+
+        double yMatrix = Math.Ceiling(possibleY);
+        return yMatrix;
+    }
+
+
+    void GetRedGhostMatrixPosition()
+    {
+        double x = gameManager.redGhost.transform.position.x;
+        double y = gameManager.redGhost.transform.position.y;
+
+        double yInicial = -4.21f;
+        double xInicial = -3.74f;
+
+        double possibleY = (yInicial - y) / 0.3;
+        double possibleX = (xInicial - x) / 0.3;
+
+        if (possibleY < 0)
+        {
+            possibleY *= -1;
+        }
+
+        if (possibleX < 0)
+        {
+            possibleX *= -1;
+        }
+
+        double yMatrix = Math.Ceiling(possibleY);
+        double xMatrix = Math.Ceiling(possibleX);
+    }
+
     void DetermineGhostScatterModeDirection()
     {
         if (transform.position.x == scatterNodes[scatterNodeIndex].transform.position.x && transform.position.y == scatterNodes[scatterNodeIndex].transform.position.y)
@@ -369,6 +485,7 @@ public class EnemyController : MonoBehaviour
 
     void DetermineRedGhostDirection()
     {
+        GetRedGhostMatrixPosition();
         string direction = GetClosestDirection(gameManager.pacman.transform.position);
         movementController.SetDirection(direction);
     }
@@ -520,7 +637,7 @@ public class EnemyController : MonoBehaviour
     } 
 
     private void OnTriggerEnter2D(Collider2D collision){
-        if(collision.tag == "Player" && ghostNodeStates != GhostNodeStatesEnum.respawning){
+        if (collision.tag == "Player" && ghostNodeStates != GhostNodeStatesEnum.respawning){
 
             //Ser comido
             if (isFrightened){
@@ -534,6 +651,122 @@ public class EnemyController : MonoBehaviour
             }
 
         }
-    } 
+    }
 }
 
+
+public class Node : IComparable<Node>
+{
+    public int x;
+    public int y;
+    public int f;  // f = g + h (total estimated cost)
+    public int g;  // accumulated cost from the start node
+    public int h;  // heuristic (estimated cost to the goal node)
+    public Node parent;
+
+    public Node(int x, int y)
+    {
+        this.x = x;
+        this.y = y;
+        this.f = 0;
+        this.g = 0;
+        this.h = 0;
+        this.parent = null;
+    }
+
+    public int CompareTo(Node other)
+    {
+        return f.CompareTo(other.f);
+    }
+}
+
+public class AStar
+{
+    private static readonly int[][] directions = { new int[] { -1, 0 }, new int[] { 1, 0 }, new int[] { 0, -1 }, new int[] { 0, 1 } };  // Movements: up, down, left, right
+
+    public static List<Node> FindPath(int[][] level, Node start, Node goal)
+    {
+        SortedSet<Node> openList = new SortedSet<Node>();  // Priority queue for open nodes
+        HashSet<Node> closedSet = new HashSet<Node>();     // Set of visited nodes
+
+        openList.Add(start);
+
+        while (openList.Count > 0)
+        {
+            Node current = openList.Min;
+            openList.Remove(current);
+
+            if (current.x == goal.x && current.y == goal.y)
+            {
+                // Path found, reconstruct and return the path
+                return ReconstructPath(current);
+            }
+
+            closedSet.Add(current);
+
+            foreach (var dir in directions)
+            {
+                int newX = current.x + dir[0];
+                int newY = current.y + dir[1];
+
+                if (IsValidMove(level, newX, newY))
+                {
+                    Node neighbor = new Node(newX, newY);
+                    if (!closedSet.Contains(neighbor))
+                    {
+                        int newG = current.g + 1;  // Accumulated cost
+
+                        neighbor.g = newG;
+                        neighbor.h = CalculateHeuristic(neighbor, goal);
+                        neighbor.f = newG + neighbor.h;
+                        neighbor.parent = current;
+
+                        if (!ContainsNode(openList, neighbor))
+                        {
+                            openList.Add(neighbor);
+                        }
+                    }
+                }
+            }
+        }
+
+        return null;  // Path not found
+    }
+
+    private static bool IsValidMove(int[][] level, int x, int y)
+    {
+        int numRows = level.Length;
+        int numCols = level[0].Length;
+        return x >= 0 && x < numRows && y >= 0 && y < numCols && level[x][y] != 4;  // Check bounds and not a wall
+    }
+
+    private static int CalculateHeuristic(Node current, Node goal)
+    {
+        // Manhattan distance as heuristic
+        return Math.Abs(current.x - goal.x) + Math.Abs(current.y - goal.y);
+    }
+
+    private static bool ContainsNode(SortedSet<Node> set, Node node)
+    {
+        foreach (var n in set)
+        {
+            if (n.x == node.x && n.y == node.y)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static List<Node> ReconstructPath(Node current)
+    {
+        List<Node> path = new List<Node>();
+        while (current != null)
+        {
+            path.Add(current);
+            current = current.parent;
+        }
+        path.Reverse();  // Reverse to get the correct path from start to end
+        return path;
+    }
+}
